@@ -4,12 +4,27 @@
 
 const { Heap } = require("heap-js");
 
+const asyncBuffer = (s) => {
+  let nextPromise = s.popAsync();
+  return {
+    popAsync: async (i) => {
+      const val = await nextPromise;
+      nextPromise = s.popAsync();
+      return val;
+    }
+  };
+};
+
 module.exports = async (logSources, printer) => {
   const cmp = (a, b) => a.log.date - b.log.date;
   const queue = new Heap(cmp);
 
+  const buffers = logSources.map(
+    s => asyncBuffer(s)
+  );
+
   const tryQueueNext = async (i) => {
-    const nextLog = await logSources[i].popAsync();
+    const nextLog = await buffers[i].popAsync();
     if (nextLog) {
       queue.push({ index: i, log: nextLog });
     }
