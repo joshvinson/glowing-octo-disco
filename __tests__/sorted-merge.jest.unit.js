@@ -16,6 +16,7 @@ describe("sync-sorted-merge", () => {
       done: () => {}
     });
 
+    expect(results.length).toEqual(12);
     let lastDate = null;
     for (let i = 0; i < results.length; i++) {
       if (lastDate !== null) {
@@ -48,6 +49,7 @@ describe("async-sorted-merge", () => {
       done: () => {}
     });
 
+    expect(results.length).toEqual(12);
     let lastDate = null;
     for (let i = 0; i < results.length; i++) {
       if (lastDate !== null) {
